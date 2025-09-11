@@ -1,37 +1,17 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Auth from "../Layout/Auth/Auth";
 import Main from "../Layout/Main/Main";
-import Home from "../Pages/Dashboard/Home";
 import NotFound from "../NotFound";
-import ChangePassword from "../Pages/Auth/ChangePassword";
 import Login from "../Pages/Auth/Login";
 import ForgotPassword from "../Pages/Auth/ForgotPassword";
 import VerifyOtp from "../Pages/Auth/VerifyOtp";
 import ResetSuccess from "../Pages/Auth/ResetSuccess";
 import SetPassword from "../Pages/Auth/SetPassword";
+import SignUp from "../Pages/Auth/SignUp";
 
-// Dashboard pages & components
-import CustomerManagement from "../components/customerManagement/customerManagement";
-import TierSystem from "../components/TierSystem/TierSystem";
-import SubscriptionTable from "../components/subscriber/SubscriberTable";
-import PromotionManagement from "../components/promotionManagement/PromotionManagement";
-import SalesRepPortal from "../components/salesRepPortal/SalesRepPortal";
-import AuditLogs from "../components/auditLogs/AuditLogs";
-import LoginCredentials from "../components/loginCredentials/LoginCredentials";
-import ReportingAnalytics from "../components/reportingAnalytics/ReportingAnalytics";
-import PushNotifications from "../components/pushNotifications/PushNotifications";
-import OrderManagementContainer from "../components/orderMangement/OrderManagementContainer";
-import SalesManagement from "../Pages/Dashboard/SalesManagement";
-import Retailer from "../Pages/Dashboard/Retailer";
-import ViewSalesReps from "../components/SalesRepsManagement/detailsSalesReps/ViewSalesReps";
-import LoyaltyProgram from "../Pages/Dashboard/LoyaltyProgram";
+import SubmissionManagement from "../components/submissionManagement/SubmissionManagement";
+import UploadDocument from "../components/uploadDocuments/UploadDocument";
 import CategoryManagement from "../components/category/CategoryManagement";
-import ColorManagement from "../components/colorManage/ColorManagement";
-import SizeManagement from "../components/sizeManagement/SizeManagement";
-import ProductManagement from "../components/productManagement/ProductsManagement";
-import UserManagement from "../components/userMangement/UserManagement";
-import PackagesPlans from "../Pages/Dashboard/Subscription";
-import Banner from "../Pages/Dashboard/Banner";
 import AboutUs from "../Pages/Dashboard/AboutUs";
 import Contact from "../Pages/Dashboard/Contact";
 import PrivacyPolicy from "../Pages/Dashboard/PrivacyPolicy";
@@ -39,16 +19,27 @@ import TermsAndConditions from "../Pages/Dashboard/TermsAndCondition";
 import FAQSection from "../components/faq/Faq";
 import AdminProfile from "../Pages/Dashboard/AdminProfile/AdminProfile";
 import Notifications from "../Pages/Dashboard/Notifications";
-
-// Sales reps
-import SaleRepsManagement from "../Pages/Dashboard/SaleRepsManagement";
+import LoginCredentials from "../components/loginCredentials/LoginCredentials";
 
 import PrivateRoute from "./ProtectedRoute";
-import SubmissionManagement from "../components/submissionManagement/SubmissionManagement";
-import UploadDocument from "../components/uploadDocuments/UploadDocument";
-import SignUp from "../Pages/Auth/SignUp";
+
+// ✅ Utility to check login
+const isLoggedIn = () => {
+  return !!localStorage.getItem("token"); // or "user"
+};
 
 const router = createBrowserRouter([
+  // Root path with redirect
+  {
+    path: "/",
+    element: isLoggedIn() ? (
+      <Navigate to="/submission-management" replace />
+    ) : (
+      <Navigate to="/auth/login" replace />
+    ),
+  },
+
+  // Protected dashboard routes
   {
     path: "/",
     element: (
@@ -57,11 +48,6 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
-      // Dashboard home
-      {
-        path: "/",
-        element: <Navigate to="/submission-management" replace />,
-      },
       {
         path: "/submission-management",
         element: (
@@ -153,7 +139,7 @@ const router = createBrowserRouter([
     ],
   },
 
-  // ====== AUTH ======
+  // Auth routes
   {
     path: "/auth",
     element: <Auth />,
@@ -168,7 +154,7 @@ const router = createBrowserRouter([
     ],
   },
 
-  // ====== 404 ======
+  // 404
   { path: "*", element: <NotFound /> },
 ]);
 
