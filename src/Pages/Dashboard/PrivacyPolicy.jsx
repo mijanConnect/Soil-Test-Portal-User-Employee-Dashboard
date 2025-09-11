@@ -36,7 +36,7 @@ const PrivacyPolicy = () => {
 
   return (
     <div className="p-4">
-      <div className="flex justify-between items-center mb-6">
+      {/* <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold">Privacy Policy</h2>
         <Button
           onClick={showModal}
@@ -44,7 +44,7 @@ const PrivacyPolicy = () => {
         >
           Update Privacy Policy
         </Button>
-      </div>
+      </div> */}
 
       <div className="saved-content mt-6 border p-6 rounded-lg bg-white">
         <div
