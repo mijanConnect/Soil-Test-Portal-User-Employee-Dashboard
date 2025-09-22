@@ -11,10 +11,10 @@ const Main = () => {
     const handleResize = () => {
       if (window.innerWidth < 992) {
         setIsMobile(true);
-        setCollapsed(true); // start collapsed on mobile
+        setCollapsed(true); 
       } else {
         setIsMobile(false);
-        setCollapsed(false); // expanded on desktop
+        setCollapsed(false); 
       }
     };
     window.addEventListener("resize", handleResize);

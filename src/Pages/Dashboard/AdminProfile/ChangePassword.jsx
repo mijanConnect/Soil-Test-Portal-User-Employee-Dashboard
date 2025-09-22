@@ -1,12 +1,29 @@
 import { Button, Form, Input } from "antd";
 import React from "react";
 import GradientButton from "../../../components/common/GradiantButton";
+import { useChangePasswordMutation } from "../../../redux/apiSlices/authSlice";
+import toast from "react-hot-toast";
+import { useSearchParams } from "react-router-dom";
 
 const ChangePassword = () => {
   const [form] = Form.useForm();
+  const [changePassword] = useChangePasswordMutation();
+  const [searchParams] = useSearchParams();
 
-  const handleChangePassword = (values) => {
-    console.log(values);
+  const handleChangePassword = async (values) => {
+    const resetToken = searchParams.get("token");
+    try {
+      const res = await changePassword({ resetToken, ...values }).unwrap();
+      console.log("res =====================>", res);
+      if (res?.success) {
+        toast.success(res?.message || "Password changed successfully");
+      } else {
+        toast.error(res?.message || "Password changed failed");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.message || "Password changed failed");
+    }
   };
 
   return (
@@ -31,7 +48,7 @@ const ChangePassword = () => {
             <div className="mb-[20px] w-[100%]">
               <Form.Item
                 style={{ marginBottom: 0 }}
-                name="current_password"
+                name="currentPassword"
                 label={<p style={{ display: "block" }}>Current Password</p>}
                 rules={[
                   {
@@ -56,9 +73,9 @@ const ChangePassword = () => {
 
             <div className="mb-[20px] w-[100%]">
               <Form.Item
-                name="new_password"
+                name="newPassword"
                 label={<p style={{ display: "block" }}>New Password</p>}
-                dependencies={["current_password"]}
+                dependencies={["currentPassword"]}
                 hasFeedback
                 rules={[
                   {
@@ -69,7 +86,7 @@ const ChangePassword = () => {
                     validator(_, value) {
                       if (
                         !value ||
-                        getFieldValue("current_password") === value
+                        getFieldValue("currentPassword") === value
                       ) {
                         return Promise.reject(
                           new Error(
@@ -99,10 +116,10 @@ const ChangePassword = () => {
 
             <div className="mb-[40px] w-[100%]">
               <Form.Item
-                name="confirm_password"
+                name="confirmPassword"
                 label={<p style={{ display: "block" }}>Re-Type Password</p>}
                 style={{ marginBottom: 0 }}
-                dependencies={["new_password"]}
+                dependencies={["newPassword"]}
                 hasFeedback
                 rules={[
                   {
@@ -111,7 +128,7 @@ const ChangePassword = () => {
                   },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
-                      if (!value || getFieldValue("new_password") === value) {
+                      if (!value || getFieldValue("newPassword") === value) {
                         return Promise.resolve();
                       }
                       return Promise.reject(

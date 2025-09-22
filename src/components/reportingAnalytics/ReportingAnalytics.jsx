@@ -53,7 +53,7 @@ const data = [
   {
     sl: 1,
     date: "Jan 2025",
-    category: "Employee",
+    category: "ADMIN",
     region: "USA",
     Revenue: 100,
     Users: 65,
@@ -62,7 +62,7 @@ const data = [
   {
     sl: 2,
     date: "Feb 2025",
-    category: "Employee",
+    category: "ADMIN",
     region: "USA",
     Revenue: 75,
     Users: 60,
@@ -71,7 +71,7 @@ const data = [
   {
     sl: 3,
     date: "Mar 2025",
-    category: "Employee",
+    category: "ADMIN",
     region: "USA",
     Revenue: 50,
     Users: 62,
@@ -80,7 +80,7 @@ const data = [
   {
     sl: 4,
     date: "Apr 2025",
-    category: "Employee",
+    category: "ADMIN",
     region: "UK",
     Revenue: 69,
     Users: 54,
@@ -89,7 +89,7 @@ const data = [
   {
     sl: 5,
     date: "May 2025",
-    category: "Employee",
+    category: "ADMIN",
     region: "UK",
     Revenue: 47,
     Users: 59,
@@ -98,7 +98,7 @@ const data = [
   {
     sl: 6,
     date: "Jun 2025",
-    category: "Employee",
+    category: "ADMIN",
     region: "UK",
     Revenue: 60,
     Users: 68,
@@ -107,7 +107,7 @@ const data = [
   {
     sl: 7,
     date: "Jul 2025",
-    category: "Employee",
+    category: "ADMIN",
     region: "USA",
     Revenue: 88,
     Users: 57,
@@ -116,7 +116,7 @@ const data = [
   {
     sl: 8,
     date: "Aug 2025",
-    category: "Employee",
+    category: "ADMIN",
     region: "USA",
     Revenue: 88,
     Users: 57,

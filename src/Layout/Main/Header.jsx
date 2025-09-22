@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { FaRegBell } from "react-icons/fa6";
-import { Badge, Button, Dropdown, Menu, Modal, List } from "antd";
-import { IoIosLogOut } from "react-icons/io";
-import Avatar from "../../assets/avatar.png";
+import { Badge, Button, Dropdown, Menu, Modal, List, Avatar } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-
+import { useProfileQuery } from "../../redux/apiSlices/authSlice";
+import { getImageUrl } from "../../components/common/imageUrl";
+import { UploadOutlined } from "@ant-design/icons";
 const Header = ({ toggleSidebar, isMobile }) => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = React.useState(false);
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
+  const { data: profileData, isLoading: profileLoading } = useProfileQuery();
   const navigate = useNavigate();
 
   const showLogoutConfirm = () => setIsLogoutModalOpen(true);
@@ -33,7 +34,8 @@ const Header = ({ toggleSidebar, isMobile }) => {
   };
 
   const handleCancelLogout = () => setIsLogoutModalOpen(false);
-
+  const userInformation = profileData?.data;
+  console.log("userInformation", userInformation);
   const menu = (
     <Menu>
       <Menu.Item key="settings">
@@ -81,15 +83,21 @@ const Header = ({ toggleSidebar, isMobile }) => {
           <div className="flex items-center gap-3 cursor-pointer">
             <div className="flex flex-row gap-1">
               <p>Hello,</p>
-              <p className="text-[16px] font-semibold">Sabbir</p>
+              <p className="text-[16px] font-semibold">
+                {userInformation?.name}
+              </p>
             </div>
             <img
+              src={getImageUrl(
+                userInformation?.profile || userInformation?.image
+              )}
               style={{
                 clipPath: "circle()",
                 width: 45,
                 height: 45,
+                objectFit: "cover",
               }}
-              src={Avatar}
+              
               alt="profile-pic"
               className="clip"
             />

@@ -4,12 +4,18 @@ import { useNavigate } from "react-router-dom";
 import keyIcon from "../../assets/key.png";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useForgotPasswordMutation } from "../../redux/apiSlices/authSlice";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
-
+  const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
   const onFinish = async (values) => {
-    navigate(`/auth/verify-otp?email=${values?.email}`);
+    try {
+      await forgotPassword(values).unwrap();
+      navigate(`/auth/verify-otp?email=${values?.email}&type=password-reset`);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

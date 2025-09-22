@@ -22,10 +22,11 @@ import Notifications from "../Pages/Dashboard/Notifications";
 import LoginCredentials from "../components/loginCredentials/LoginCredentials";
 
 import PrivateRoute from "./ProtectedRoute";
+import ChangePassword from "../Pages/Dashboard/AdminProfile/ChangePassword";
 
 // ✅ Utility to check login
 const isLoggedIn = () => {
-  return !!localStorage.getItem("token"); // or "user"
+  return !!localStorage.getItem("accessToken");
 };
 
 const router = createBrowserRouter([
@@ -43,7 +44,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <PrivateRoute allowedRoles={["EMPLOYEE", "USER"]}>
+      <PrivateRoute allowedrole={["ADMIN", "USER"]}>
         <Main />
       </PrivateRoute>
     ),
@@ -51,7 +52,7 @@ const router = createBrowserRouter([
       {
         path: "/submission-management",
         element: (
-          <PrivateRoute allowedRoles={["EMPLOYEE", "USER"]}>
+          <PrivateRoute allowedrole={["ADMIN", "USER"]}>
             <SubmissionManagement />
           </PrivateRoute>
         ),
@@ -59,7 +60,7 @@ const router = createBrowserRouter([
       {
         path: "/user-management",
         element: (
-          <PrivateRoute allowedRoles={["EMPLOYEE"]}>
+          <PrivateRoute allowedrole={["ADMIN"]}>
             <LoginCredentials />
           </PrivateRoute>
         ),
@@ -67,7 +68,7 @@ const router = createBrowserRouter([
       {
         path: "/upload-documents",
         element: (
-          <PrivateRoute allowedRoles={["EMPLOYEE", "USER"]}>
+          <PrivateRoute allowedrole={["ADMIN", "USER"]}>
             <UploadDocument />
           </PrivateRoute>
         ),
@@ -75,7 +76,7 @@ const router = createBrowserRouter([
       {
         path: "/category-management",
         element: (
-          <PrivateRoute allowedRoles={["EMPLOYEE"]}>
+          <PrivateRoute allowedrole={["ADMIN"]}>
             <CategoryManagement />
           </PrivateRoute>
         ),
@@ -83,7 +84,7 @@ const router = createBrowserRouter([
       {
         path: "/about-us",
         element: (
-          <PrivateRoute allowedRoles={["EMPLOYEE", "USER"]}>
+          <PrivateRoute allowedrole={["ADMIN", "USER"]}>
             <AboutUs />
           </PrivateRoute>
         ),
@@ -91,7 +92,7 @@ const router = createBrowserRouter([
       {
         path: "/contact",
         element: (
-          <PrivateRoute allowedRoles={["EMPLOYEE", "USER"]}>
+          <PrivateRoute allowedrole={["ADMIN", "USER"]}>
             <Contact />
           </PrivateRoute>
         ),
@@ -99,7 +100,7 @@ const router = createBrowserRouter([
       {
         path: "/privacy-policy",
         element: (
-          <PrivateRoute allowedRoles={["EMPLOYEE", "USER"]}>
+          <PrivateRoute allowedrole={["ADMIN", "USER"]}>
             <PrivacyPolicy />
           </PrivateRoute>
         ),
@@ -107,7 +108,7 @@ const router = createBrowserRouter([
       {
         path: "/terms-and-conditions",
         element: (
-          <PrivateRoute allowedRoles={["EMPLOYEE", "USER"]}>
+          <PrivateRoute allowedrole={["ADMIN", "USER"]}>
             <TermsAndConditions />
           </PrivateRoute>
         ),
@@ -115,7 +116,7 @@ const router = createBrowserRouter([
       {
         path: "/faq",
         element: (
-          <PrivateRoute allowedRoles={["EMPLOYEE", "USER"]}>
+          <PrivateRoute allowedrole={["ADMIN", "USER"]}>
             <FAQSection />
           </PrivateRoute>
         ),
@@ -123,7 +124,7 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: (
-          <PrivateRoute allowedRoles={["EMPLOYEE", "USER"]}>
+          <PrivateRoute allowedrole={["ADMIN", "USER"]}>
             <AdminProfile />
           </PrivateRoute>
         ),
@@ -131,7 +132,7 @@ const router = createBrowserRouter([
       {
         path: "/notification",
         element: (
-          <PrivateRoute allowedRoles={["EMPLOYEE", "USER"]}>
+          <PrivateRoute allowedrole={["ADMIN", "USER"]}>
             <Notifications />
           </PrivateRoute>
         ),
@@ -150,6 +151,7 @@ const router = createBrowserRouter([
       { path: "verify-otp", element: <VerifyOtp /> },
       { path: "reset-success", element: <ResetSuccess /> },
       { path: "set-password", element: <SetPassword /> },
+      { path: "change-password", element: <ChangePassword /> },
       { path: "signup", element: <SignUp /> },
     ],
   },

@@ -9,7 +9,7 @@ const aboutUsSlice = api.injectEndpoints({
                     method: "PATCH",
                     body: {description},
                     headers:{
-                        Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
+                        Authorization: `Bearer ${JSON.parse(localStorage.getItem("accessToken"))}`
                     }
                 }
             }
@@ -20,7 +20,7 @@ const aboutUsSlice = api.injectEndpoints({
                     url: "/about/get-about",
                     method: "GET",
                     headers:{
-                        Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
+                        Authorization: `Bearer ${JSON.parse(localStorage.getItem("accessToken"))}`
                     }
                 }
             },

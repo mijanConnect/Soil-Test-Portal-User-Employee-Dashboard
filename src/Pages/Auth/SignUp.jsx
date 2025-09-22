@@ -3,13 +3,25 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import FormItem from "../../components/common/FormItem";
 import image4 from "../../assets/image4.png";
-
+import { useCreateUserMutation } from "../../redux/apiSlices/userSlice";
+import toast from "react-hot-toast";
 const SignUp = () => {
   const navigate = useNavigate();
+  const [createUser, { isLoading, isSuccess, error }] = useCreateUserMutation();
 
   const onFinish = async (values) => {
-    console.log("Form values:", values);
-    navigate("/auth/otp-verification");
+    try {
+      values.role = "USER";
+      const res = await createUser(values).unwrap();
+      if (res.success) {
+        toast.success(
+          "User created successfully please check your email for verification."
+        );
+        navigate(`/auth/verify-otp?email=${values.email}&type=registration`);
+      }
+    } catch (error) {
+      toast.error(error?.data?.message);
+    }
   };
 
   return (
@@ -18,8 +30,8 @@ const SignUp = () => {
       <div className="text-center mb-2">
         <img src={image4} alt="logo" className="h-20 w-20 mx-auto" />
         {/* <h1 className="text-[25px] font-semibold mb-[10px] mt-[20px]">
-          Merchants Dashboard
-        </h1> */}
+        Merchants Dashboard
+      </h1> */}
         <p className="mt-6 text-[22px] font-semibold">Create an account</p>
       </div>
 
@@ -110,6 +122,7 @@ const SignUp = () => {
           <button
             htmlType="submit"
             type="submit"
+            disabled={isLoading}
             style={{
               width: "100%",
               height: 45,
@@ -120,7 +133,7 @@ const SignUp = () => {
             }}
             className="flex items-center justify-center border border-primary bg-primary rounded-lg hover:bg-white text-white hover:text-primary transition"
           >
-            Sign Up
+            {isLoading ? "Creating..." : "Sign Up"}
           </button>
         </Form.Item>
       </Form>

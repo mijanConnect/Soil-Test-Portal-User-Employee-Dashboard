@@ -1,7 +1,8 @@
 import { Menu, Modal } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IoIosLogOut } from "react-icons/io";
+import { jwtDecode } from "jwt-decode";
 import {
   Dashboard,
   Marchant,
@@ -18,7 +19,6 @@ import {
   CategoryIcon,
 } from "../../components/common/Svg";
 import image4 from "../../assets/image4.png";
-import { useUser } from "../../provider/User";
 
 const Sidebar = ({ collapsed, setCollapsed, isMobile }) => {
   const location = useLocation();
@@ -27,7 +27,10 @@ const Sidebar = ({ collapsed, setCollapsed, isMobile }) => {
   const [openKeys, setOpenKeys] = useState([]);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
-  const { user } = useUser();
+  const userToken = localStorage.getItem("accessToken");
+
+  // decode token
+  const decoded = jwtDecode(userToken);
 
   const showLogoutConfirm = () => setIsLogoutModalOpen(true);
   const handleLogout = () => {
@@ -69,7 +72,7 @@ const Sidebar = ({ collapsed, setCollapsed, isMobile }) => {
           {collapsed ? "" : "Submission Management"}
         </Link>
       ),
-      roles: ["EMPLOYEE", "USER"],
+      role: ["ADMIN", "USER"],
     },
     {
       key: "/user-management",
@@ -77,7 +80,7 @@ const Sidebar = ({ collapsed, setCollapsed, isMobile }) => {
       label: (
         <Link to="/user-management">{collapsed ? "" : "User Management"}</Link>
       ),
-      roles: ["EMPLOYEE"],
+      role: ["ADMIN"],
     },
     {
       key: "/upload-documents",
@@ -87,7 +90,7 @@ const Sidebar = ({ collapsed, setCollapsed, isMobile }) => {
           {collapsed ? "" : "Upload New Documents"}
         </Link>
       ),
-      roles: ["EMPLOYEE", "USER"],
+      role: ["ADMIN", "USER"],
     },
     {
       key: "/category-management",
@@ -97,13 +100,13 @@ const Sidebar = ({ collapsed, setCollapsed, isMobile }) => {
           {collapsed ? "" : "Category Management"}
         </Link>
       ),
-      roles: ["EMPLOYEE"],
+      role: ["ADMIN"],
     },
     {
       key: "subMenuSetting",
       icon: renderIcon(Settings, "subMenuSetting"),
       label: collapsed ? "" : "Settings",
-      roles: ["EMPLOYEE", "USER"],
+      role: ["ADMIN", "USER"],
       children: [
         {
           key: "/profile",
@@ -131,30 +134,35 @@ const Sidebar = ({ collapsed, setCollapsed, isMobile }) => {
       key: "/logout",
       icon: <IoIosLogOut size={24} />,
       label: <p onClick={showLogoutConfirm}>{collapsed ? "" : "Logout"}</p>,
-      roles: ["EMPLOYEE", "USER"],
+      role: ["ADMIN", "USER"],
     },
   ];
 
-  const menuItems = rawMenuItems.filter(
-    (item) => !item.roles || item.roles.includes(user?.role)
-  );
+  // useMemo to stabilize menuItems reference
+  const menuItems = useMemo(() => {
+    return rawMenuItems.filter(
+      (item) => !item.role || item.role.includes(decoded.role)
+    );
+  }, [decoded.role]);
 
+  // useEffect to set selected/open keys without infinite loop
   useEffect(() => {
     const selectedItem = menuItems.find(
       (item) =>
         item.key === path ||
         (item.children && item.children.some((sub) => sub.key === path))
     );
-    if (selectedItem) {
-      setSelectedKey(path);
-      if (selectedItem.children) setOpenKeys([selectedItem.key]);
-      else {
-        const parentItem = menuItems.find(
-          (item) =>
-            item.children && item.children.some((sub) => sub.key === path)
-        );
-        if (parentItem) setOpenKeys([parentItem.key]);
-      }
+    if (!selectedItem) return;
+
+    setSelectedKey(path);
+
+    if (selectedItem.children) {
+      setOpenKeys([selectedItem.key]);
+    } else {
+      const parentItem = menuItems.find(
+        (item) => item.children && item.children.some((sub) => sub.key === path)
+      );
+      if (parentItem) setOpenKeys([parentItem.key]);
     }
   }, [path, menuItems]);
 

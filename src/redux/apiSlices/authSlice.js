@@ -6,7 +6,7 @@ const authSlice = api.injectEndpoints({
       query: (data) => {
         return {
           method: "POST",
-          url: "/auth/otp-verify",
+          url: "/auth/verify-email",
           body: data,
         };
       },
@@ -37,11 +37,24 @@ const authSlice = api.injectEndpoints({
       },
     }),
     resetPassword: builder.mutation({
-      query: (value) => {
+      query: ({ token, ...data }) => {
         return {
           method: "POST",
           url: "/auth/reset-password",
-          body: value,
+          body: data,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        };
+      },
+    }),
+    resendOtp: builder.mutation({
+      query: (data) => {
+        return {
+          method: "POST",
+          url: "/auth/resend-otp",
+          body: data,
         };
       },
     }),
@@ -51,11 +64,6 @@ const authSlice = api.injectEndpoints({
           method: "POST",
           url: "/auth/change-password",
           body: data,
-          headers: {
-            Authorization: `Bearer ${JSON.parse(
-              localStorage.getItem("token")
-            )}`,
-          },
         };
       },
     }),
@@ -63,33 +71,20 @@ const authSlice = api.injectEndpoints({
     updateProfile: builder.mutation({
       query: (data) => {
         return {
-          method: "POST",
-          url: "/auth/update-profile",
+          method: "PATCH",
+          url: "/user",
           body: data,
-          headers: {
-            Authorization: `Bearer ${JSON.parse(
-              localStorage.getItem("token")
-            )}`,
-          },
         };
       },
+      invalidatesTags: ["Auth"],
     }),
 
     profile: builder.query({
-      query: () => {
-        return {
-          method: "GET",
-          url: "/auth/get-profile",
-          headers: {
-            Authorization: `Bearer ${JSON.parse(
-              localStorage.getItem("token")
-            )}`,
-          },
-        };
-      },
-      transformResponse: ({ user }) => {
-        return user;
-      },
+      query: () => ({
+        method: "GET",
+        url: "/user/profile",
+      }),
+      providesTags: ["Auth"],
     }),
   }),
 });
@@ -102,4 +97,5 @@ export const {
   useChangePasswordMutation,
   useUpdateProfileMutation,
   useProfileQuery,
+  useResendOtpMutation,
 } = authSlice;

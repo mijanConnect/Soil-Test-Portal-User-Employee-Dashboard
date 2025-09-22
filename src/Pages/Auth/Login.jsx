@@ -1,64 +1,35 @@
-import { Button, Checkbox, Form, Input } from "antd";
-import React, { useState } from "react";
+import { Form, Input } from "antd";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import FormItem from "../../components/common/FormItem";
 import image4 from "../../assets/image4.png";
 import googleIcon from "../../assets/google-icon.png";
-import { useUser } from "../../provider/User";
-
-// ✅ Dummy users
-const dummyUsers = [
-  {
-    email: "admin@example.com",
-    password: "admin123",
-    role: "ADMIN",
-  },
-  {
-    email: "user@example.com",
-    password: "user123",
-    role: "USER",
-  },
-  {
-    email: "employee@example.com",
-    password: "employee123",
-    role: "EMPLOYEE",
-  },
-];
+import { useLoginMutation } from "../../redux/apiSlices/authSlice";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [error, setError] = useState("");
-  const { setUser } = useUser(); // 👈 use context
+  const [login, { isLoading, error: loginError }] = useLoginMutation();
 
   const onFinish = async (values) => {
-    const { email, password } = values;
-
-    const foundUser = dummyUsers.find(
-      (u) => u.email === email && u.password === password
-    );
-
-    if (!foundUser) {
-      setError("Invalid email or password");
-      return;
+    try {
+      const res = await login(values).unwrap();
+      if (res?.success && res?.data?.accessToken) {
+        localStorage.setItem("accessToken", res.data.accessToken);
+        toast.success(res.message);
+        navigate("/submission-management");
+      } else {
+        toast.error(res?.message || "Login failed");
+      }
+    } catch (error) {
+      toast.error(error?.data?.message || "Something went wrong");
     }
-
-    // ✅ Save user in localStorage
-    localStorage.setItem("user", JSON.stringify(foundUser));
-
-    // ✅ Update context immediately
-    setUser(foundUser);
-
-    // Navigate after login
-    navigate("/submission-management");
   };
 
   return (
     <div>
       <div className="text-center mb-8">
         <img src={image4} alt="logo" className="h-40 w-40 mx-auto" />
-        {/* <h1 className="text-[25px] font-semibold mb-[10px] mt-[20px]">
-          Merchants Dashboard
-        </h1> */}
         <p className="mt-6">Welcome back! Please enter your details.</p>
       </div>
       <Form onFinish={onFinish} layout="vertical">
@@ -94,11 +65,11 @@ const Login = () => {
           />
         </Form.Item>
 
-        {error && (
+        {loginError && (
           <p
             style={{ color: "red", marginBottom: "10px", textAlign: "center" }}
           >
-            {error}
+            {loginError}
           </p>
         )}
 
@@ -133,30 +104,10 @@ const Login = () => {
             }}
             className="flex items-center justify-center border border-primary bg-primary rounded-lg hover:bg-white text-white hover:text-primary transition"
           >
-            Sign in
+            {isLoading ? "Loading..." : "Sign in"}
           </button>
         </Form.Item>
       </Form>
-      <Form.Item style={{ marginBottom: 0 }}>
-        <button
-          htmlType="submit"
-          type="submit"
-          style={{
-            width: "100%",
-            height: 45,
-            color: "#1E1E1E",
-            fontWeight: "400px",
-            fontSize: "18px",
-            marginTop: 20,
-            borderRadius: "200px",
-            border: "1px solid #48B14C",
-          }}
-          className="flex items-center justify-center rounded-lg"
-        >
-          <img src={googleIcon} alt="Google logo" className="mr-[12px]" />
-          Sign in with Google
-        </button>
-      </Form.Item>
       <div className="mt-[20px]">
         <p className="text-center text-[#1E1E1E]">
           Don't have an account?{" "}

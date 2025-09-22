@@ -3,13 +3,27 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import keyIcon from "../../assets/key.png";
 import { ArrowLeft } from "lucide-react";
+import { useResetPasswordMutation } from "../../redux/apiSlices/authSlice";
+import toast from "react-hot-toast";
+import { useSearchParams } from "react-router-dom";
 
 const SetPassword = () => {
   const email = new URLSearchParams(location.search).get("email");
+  const token = new URLSearchParams(location.search).get("token");
+  const [resetPassword, { isLoading }] = useResetPasswordMutation();
   const navigate = useNavigate();
-
-  const onFinish = async (values) => {
-    navigate(`/auth/login`);
+  const onFinish = async (data) => {
+    try {
+      const res = await resetPassword({ token, ...data }).unwrap();
+      console.log("res =====================>", res?.data);
+      if (res?.success) {
+        toast.success("Password reset successfully");
+        navigate(`/auth/login`);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Password reset failed");
+    }
   };
 
   return (
