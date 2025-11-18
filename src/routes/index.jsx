@@ -100,9 +100,9 @@ const router = createBrowserRouter([
       {
         path: "/privacy-policy",
         element: (
-          <PrivateRoute allowedrole={["ADMIN", "USER"]}>
-            <PrivacyPolicy />
-          </PrivateRoute>
+          // <PrivateRoute allowedrole={["ADMIN", "USER"]}>
+          <PrivacyPolicy />
+          // </PrivateRoute>
         ),
       },
       {
