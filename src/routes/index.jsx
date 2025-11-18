@@ -100,9 +100,9 @@ const router = createBrowserRouter([
       {
         path: "/privacy-policy",
         element: (
-          // <PrivateRoute allowedrole={["ADMIN", "USER"]}>
-          <PrivacyPolicy />
-          // </PrivateRoute>
+          <PrivateRoute allowedrole={["ADMIN", "USER"]}>
+            <PrivacyPolicy />
+          </PrivateRoute>
         ),
       },
       {
@@ -154,6 +154,15 @@ const router = createBrowserRouter([
       { path: "change-password", element: <ChangePassword /> },
       { path: "signup", element: <SignUp /> },
     ],
+  },
+
+  {
+    path: "/privacy",
+    element: (
+      // <PrivateRoute allowedrole={["ADMIN", "USER"]}>
+      <PrivacyPolicy />
+      // </PrivateRoute>
+    ),
   },
 
   // 404
