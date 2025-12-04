@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import JoditEditor from "jodit-react";
 import { Button, message, Modal, Spin } from "antd";
 import {
@@ -10,7 +10,7 @@ import { useProfileQuery } from "../../redux/apiSlices/authSlice";
 
 const PrivacyPolicy = () => {
   const editor = useRef(null);
-   const [termsContent, setTermsContent] = useState("");
+  const [termsContent, setTermsContent] = useState("");
   const { data, isLoading } = useGetPrivacyPolicyQuery();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [updatePrivacyPolicy] = useCreatePrivacyPolicyMutation();
@@ -28,7 +28,7 @@ const PrivacyPolicy = () => {
   const showModal = () => {
     setIsModalOpen(true);
   };
-    useEffect(() => {
+  useEffect(() => {
     if (data?.data?.[0]?.content) {
       setTermsContent(data.data[0].content);
     }
@@ -38,7 +38,7 @@ const PrivacyPolicy = () => {
     try {
       const res = await updatePrivacyPolicy({
         id: data?.data?.id,
-        content: data?.data?.[0]?.content,
+        content: termsContent,
         type: "privacy",
       });
       if (res?.data?.success) {
