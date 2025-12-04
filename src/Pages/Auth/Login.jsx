@@ -69,7 +69,7 @@ const Login = () => {
           <p
             style={{ color: "red", marginBottom: "10px", textAlign: "center" }}
           >
-            {loginError}
+            {loginError?.data?.message || loginError?.message || "An error occurred"}
           </p>
         )}
 

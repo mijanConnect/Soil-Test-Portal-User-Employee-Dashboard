@@ -44,7 +44,7 @@ const ChangePassword = () => {
   
         })
       } catch (error) {
-        toast.error(error);
+        toast.error(error?.data?.message || error?.message || "Something went wrong");
       }
     }
   };
