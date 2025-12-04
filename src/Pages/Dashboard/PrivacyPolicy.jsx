@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
 import JoditEditor from "jodit-react";
-import GradientButton from "../../components/common/GradiantButton";
 import { Button, message, Modal, Spin } from "antd";
 import {
   useGetPrivacyPolicyQuery,
@@ -11,7 +10,8 @@ import { useProfileQuery } from "../../redux/apiSlices/authSlice";
 
 const PrivacyPolicy = () => {
   const editor = useRef(null);
-  const { data, isLoading, isError } = useGetPrivacyPolicyQuery();
+   const [termsContent, setTermsContent] = useState("");
+  const { data, isLoading } = useGetPrivacyPolicyQuery();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [updatePrivacyPolicy] = useCreatePrivacyPolicyMutation();
   const { data: profileData, isLoading: profileLoading } = useProfileQuery();
@@ -25,11 +25,14 @@ const PrivacyPolicy = () => {
 
   const userRole = profileData?.data?.role;
 
-
-
   const showModal = () => {
     setIsModalOpen(true);
   };
+    useEffect(() => {
+    if (data?.data?.[0]?.content) {
+      setTermsContent(data.data[0].content);
+    }
+  }, [data]);
 
   const handleOk = async () => {
     try {
@@ -58,16 +61,14 @@ const PrivacyPolicy = () => {
     <div className="p-4">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold">Privacy Policy</h2>
-        {userRole === "ADMIN" ||
-          (userRole === "SUPER_ADMIN") ?
-          (
-            <Button
-              onClick={showModal}
-              className="bg-primary !text-white hover:!text-secondary hover:!bg-white hover:!border-primary px-[50px] py-[20px] rounded-lg text-[16px] font-medium"
-            >
-              Update Privacy Policy
-            </Button>
-          ) : null}
+        {userRole === "ADMIN" || userRole === "SUPER_ADMIN" ? (
+          <Button
+            onClick={showModal}
+            className="bg-primary !text-white hover:!text-secondary hover:!bg-white hover:!border-primary px-[50px] py-[20px] rounded-lg text-[16px] font-medium"
+          >
+            Update Privacy Policy
+          </Button>
+        ) : null}
       </div>
 
       <div className="saved-content mt-6 border p-6 rounded-lg bg-white">
